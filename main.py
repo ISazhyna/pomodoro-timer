@@ -14,10 +14,15 @@ WORK_MIN=0.1
 SHORT_BR_MIN=0.1
 LONG_BR_MIN=0.5
 reps=0
+timer_stopped=None
 
 # ---------------------------- TIMER RESET ------------------------------- #
 def reset():
-   pass
+   window.after_cancel(timer_stopped)
+   timer_lb.config(text="Timer")
+   check_marks.config(text="")
+   canv.itemconfig(timer_text, text="00:00")
+
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
    global reps
@@ -27,14 +32,14 @@ def start_timer():
    long_break_sec=LONG_BR_MIN*60
    if reps%8==0:
       count_down(long_break_sec)
-      timer.config(fg=RED, text="BREAK")
+      timer_lb.config(fg=RED, text="BREAK")
    elif  reps%2==0:
       count_down(short_break_sec)
-      timer.config(fg=PINK,text="BREAK")
+      timer_lb.config(fg=PINK, text="BREAK")
    else:
       if reps<8:
          count_down(work_sec)
-         timer.config(fg=GREEN, text="WORK")
+         timer_lb.config(fg=GREEN, text="WORK")
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(time):
@@ -45,7 +50,8 @@ def count_down(time):
       mins_upd=f"0{mins_upd}"
    canv.itemconfig(timer_text,text=f"{mins_upd}:{secs_upd}")
    if time>0:
-      window.after(1000, count_down, time - 1)
+      global timer_stopped
+      timer_stopped=window.after(1000, count_down, time - 1)
    else:
       start_timer()
       marks=""
@@ -61,8 +67,8 @@ window.config(padx=100, pady=50, bg=YELLOW)
 
 canv = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 
-timer=Label(text="Timer", font=(FONT_NAME, 30,"bold"), fg=GREEN, bg=YELLOW)
-timer.grid(column=1, row=0)
+timer_lb=Label(text="Timer", font=(FONT_NAME, 30, "bold"), fg=GREEN, bg=YELLOW)
+timer_lb.grid(column=1, row=0)
 
 start_btn=Button(text="Start", font=(FONT_NAME, 20), command = start_timer)
 start_btn.grid(column=0, row=2)
