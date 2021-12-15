@@ -22,6 +22,8 @@ def reset():
    timer_lb.config(text="Timer")
    check_marks.config(text="")
    canv.itemconfig(timer_text, text="00:00")
+   global reps
+   reps = 0
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
@@ -84,3 +86,4 @@ check_marks=Label(text="", fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 
 window.mainloop()
+
