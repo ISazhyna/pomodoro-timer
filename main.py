@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import time
+import math
 
 # ---------------------------- CONSTANTS ------------------------------- #
 
@@ -18,7 +19,7 @@ reps=0
 def reset():
    pass
 # ---------------------------- TIMER MECHANISM ------------------------------- #
-def start():
+def start_timer():
    global reps
    reps+=1
    work_sec=WORK_MIN*60
@@ -46,7 +47,12 @@ def count_down(time):
    if time>0:
       window.after(1000, count_down, time - 1)
    else:
-      start()
+      start_timer()
+      marks=""
+      work_sessions=math.floor(reps/2)
+      for _ in range(work_sessions):
+         marks+="✔"
+      check_marks.config(text=marks)
 # ---------------------------- UI ------------------------------- #
 
 window = Tk()
@@ -58,7 +64,7 @@ canv = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 timer=Label(text="Timer", font=(FONT_NAME, 30,"bold"), fg=GREEN, bg=YELLOW)
 timer.grid(column=1, row=0)
 
-start_btn=Button(text="Start", font=(FONT_NAME, 20), command = start)
+start_btn=Button(text="Start", font=(FONT_NAME, 20), command = start_timer)
 start_btn.grid(column=0, row=2)
 reset_btn=Button(text="Reset", font=(FONT_NAME, 20), command=reset)
 reset_btn.grid(column=2, row=2)
@@ -68,7 +74,7 @@ canv.create_image(100, 112, image = img)
 timer_text=canv.create_text(100,112,text="00:00",fill="white",font=(FONT_NAME,35,"bold"))
 canv.grid(column=1, row=1)
 
-check_mark=Label(text="✔", fg=GREEN, bg=YELLOW)
-check_mark.grid(column=1, row=3)
+check_marks=Label(text="", fg=GREEN, bg=YELLOW)
+check_marks.grid(column=1, row=3)
 
 window.mainloop()
